@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversor de Moedas</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Conversor de Moedas</h1>
+
+        <form method="POST" action="{{ url_for('converter_moeda') }}">
+            <div class="form-group">
+                <label for="valor_reais">Valor em Reais (BRL):</label>
+                <input type="number" id="valor_reais" name="valor_reais"
+                       class="form-control" step="0.01" min="0.01"
+                       placeholder="Digite o valor em reais" required>
+            </div>
+
+            <div class="form-group">
+                <label for="moeda_destino">Converter para:</label>
+                <select id="moeda_destino" name="moeda_destino" class="form-control" required>
+                    <option value="">Selecione...</option>
+                    <option value="dolar">Dólar Americano (USD)</option>
+                    <option value="euro">Euro (EUR)</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn-converter">Converter</button>
+        </form>
+
+        {% if erro %}
+            <div class="alert erro">
+                {{ erro }}
+            </div>
+        {% endif %}
+
+        {% if valor_convertido is defined %}
+            <div class="resultado">
+                <h2>Resultado da Conversão</h2>
+                <p><span class="valor">{{ "R$ %.2f"|format(valor_reais) }}</span> equivalem a</p>
+                <p class="valor-convertido">
+                    {% if moeda_destino == 'dolar' %}
+                        US$ {{ "%.2f"|format(valor_convertido) }}
+                    {% else %}
+                        € {{ "%.2f"|format(valor_convertido) }}
+                    {% endif %}
+                </p>
+                <p class="taxa">Taxa usada: 1 {{ moeda_destino|upper }} = R$ {{ "%.2f"|format(taxa) }}</p>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
